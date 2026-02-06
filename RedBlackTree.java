@@ -442,8 +442,61 @@ public class RedBlackTree{
   // To receive full credit you must explicitly check for each property! You may not assume anything based on the above implementation (which does ensure all these rules are followed)
   // you may wish to add some helper functions here.
   public boolean isRedBlack() {
-	  return false;
+    // Check property 2: Root is black
+    if (root != null && root.color != BLACK) {
+      return false;
+    }
+    // Check property 4: No red node has a red child
+    if(rule4(root) == false) {
+    	return false;
+    }
+    // Check property 5: All paths have same number of black nodes
+    if(rule5(root) == false) {
+    	return false;
+    }
+    return true;
   }
+
+  private boolean rule4(Node n){
+    if(n == null){
+      return true;
+    }
+    if(n.color == RED){
+      if((n.right!= null && n.right.color == RED )|| (n.left!= null && n.left.color == RED))
+      {
+        return false;
+      }
+    }
+    return rule4(n.left) && rule4(n.right);
+  }
+
+  private int getBlackHeight(Node n) {
+    if (n == null) {
+      return 1; // null nodes are black
+    }
+    
+    int leftHeight = getBlackHeight(n.left);
+    if (leftHeight == -1) return -1;
+    
+    int rightHeight = getBlackHeight(n.right);
+    if (rightHeight == -1) return -1;
+    
+    if (leftHeight != rightHeight) {
+      return -1; // Invalid - heights don't match
+    }
+    
+    return leftHeight + (n.color == BLACK ? 1 : 0);
+  }
+
+  private boolean rule5(Node n) {
+    return getBlackHeight(n) != -1;
+
+
+  }
+
+
+    
+   
   
   
   //This should return a string of comma separated keys that represents the shortest height path through the tree.
